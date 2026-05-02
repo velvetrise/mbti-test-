@@ -102,7 +102,7 @@ velvetrise.github.io/
 
 ## 📄 Лиценз
 
-MIT License — чөлөөтэй ашиглаж, өөрчилж болно.
+MIT License — чөлөөтэй ашиглаж болно.
 
 ---
 
