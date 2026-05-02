@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MBTI Тест — Монгол</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+/* ── Reset & Base ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FFF8F2;
+  --petal:#F7C5D0;
+  --rose:#D4607A;
+  --drose:#A83858;
+  --lrose:#FDEEF2;
+  --sage:#98B89A;
+  --dsage:#5A7D5C;
+  --lsage:#EBF3EC;
+  --lav:#C5BBDF;
+  --dlav:#7260A8;
+  --llav:#F0EDFB;
+  --tan:#E8D5C0;
+  --brown:#5C3D2E;
+  --mbrown:#8B5E4A;
+  --warm:#FFF3EA;
+  --peach:#F9D8C5;
+  --gold:#C9954A;
+  --card-r:20px;
+  --shadow:0 4px 24px rgba(180,100,100,.10);
+  --shadow-lg:0 8px 40px rgba(180,100,100,.15);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--cream);
+  color:var(--brown);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── Animated background ── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 10% 20%,rgba(247,197,208,.35) 0%,transparent 70%),
+    radial-gradient(ellipse 50% 60% at 90% 80%,rgba(197,187,223,.30) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 40% at 50% 50%,rgba(152,184,154,.15) 0%,transparent 70%),
+    var(--cream);
+  z-index:-1;
+}
+
+/* ── Typography ── */
+h1,h2,h3{font-family:'Gowun Batang',serif}
+
+/* ── Floating petals ── */
+.petal{
+  position:fixed;pointer-events:none;z-index:0;
+  font-size:1.4rem;opacity:.5;
+  animation:floatPetal linear infinite;
+}
+@keyframes floatPetal{
+  0%{transform:translateY(-60px) rotate(0deg);opacity:0}
+  10%{opacity:.5}
+  90%{opacity:.4}
+  100%{transform:translateY(110vh) rotate(360deg);opacity:0}
+}
+
+/* ── Layout ── */
+.container{
+  max-width:720px;
+  margin:0 auto;
+  padding:2rem 1.2rem 4rem;
+  position:relative;z-index:1;
+}
+
+/* ── Screen toggling ── */
+.screen{display:none;animation:fadeIn .5s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HERO / Welcome ── */
+.hero{text-align:center;padding:3rem 1rem}
+.hero-badge{
+  display:inline-block;
+  background:var(--lrose);
+  border:1.5px solid var(--petal);
+  border-radius:99px;
+  padding:.35rem 1.2rem;
+  font-size:.8rem;
+  color:var(--drose);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:1.5rem;
+}
+.hero h1{
+  font-size:clamp(2.4rem,8vw,4rem);
+  color:var(--drose);
+  line-height:1.15;
+  margin-bottom:.6rem;
+}
+.hero-sub{
+  font-family:'Gowun Batang',serif;
+  font-size:1.15rem;
+  color:var(--mbrown);
+  margin-bottom:2rem;
+  font-style:italic;
+}
+.deco-flowers{font-size:1.8rem;margin-bottom:1.5rem;letter-spacing:.4rem;animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.info-cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1rem;
+  margin:2rem 0;
+}
+.info-card{
+  background:white;
+  border:1px solid var(--tan);
+  border-radius:var(--card-r);
+  padding:1.2rem 1rem;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+.info-card .ico{font-size:1.8rem;margin-bottom:.5rem}
+.info-card p{font-size:.82rem;color:var(--mbrown);line-height:1.5}
+.info-card strong{color:var(--brown);display:block;font-size:.95rem;margin-bottom:.25rem}
+
+/* ── Buttons ── */
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:'Nunito',sans-serif;
+  font-weight:700;font-size:1rem;
+  padding:.8rem 2.4rem;
+  border-radius:99px;
+  border:none;cursor:pointer;
+  transition:all .22s ease;
+  text-decoration:none;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--rose),var(--drose));
+  color:white;
+  box-shadow:0 4px 18px rgba(212,96,122,.35);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(212,96,122,.45)}
+.btn-primary:active{transform:translateY(0)}
+.btn-outline{
+  background:white;
+  color:var(--rose);
+  border:2px solid var(--petal);
+}
+.btn-outline:hover{background:var(--lrose);border-color:var(--rose)}
+.btn-sm{padding:.5rem 1.4rem;font-size:.88rem}
+
+/* ── Progress bar ── */
+.progress-wrap{
+  background:var(--lrose);
+  border-radius:99px;
+  height:8px;
+  margin-bottom:2rem;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--petal),var(--rose));
+  border-radius:99px;
+  transition:width .4s cubic-bezier(.4,0,.2,1);
+}
+.progress-label{
+  display:flex;justify-content:space-between;
+  font-size:.78rem;color:var(--mbrown);
+  margin-bottom:.5rem;
+}
+
+/* ── Question card ── */
+.q-section-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:var(--llav);
+  border:1px solid var(--lav);
+  border-radius:99px;
+  padding:.3rem 1rem;
+  font-size:.78rem;
+  color:var(--dlav);
+  font-weight:700;
+  letter-spacing:.04em;
+  margin-bottom:1.2rem;
+  text-transform:uppercase;
+}
+.q-card{
+  background:white;
+  border:1px solid var(--tan);
+  border-radius:var(--card-r);
+  padding:2rem;
+  box-shadow:var(--shadow);
+  margin-bottom:1.5rem;
+}
+.q-num{
+  font-size:.75rem;color:var(--mbrown);
+  text-transform:uppercase;letter-spacing:.08em;
+  margin-bottom:.8rem;
+}
+.q-text{
+  font-family:'Gowun Batang',serif;
+  font-size:1.15rem;
+  line-height:1.7;
+  color:var(--brown);
+  margin-bottom:1.8rem;
+}
+
+/* ── Scale ── */
+.scale-labels{
+  display:flex;justify-content:space-between;
+  font-size:.72rem;color:var(--mbrown);
+  margin-bottom:.7rem;
+  padding:0 .2rem;
+}
+.scale-options{
+  display:flex;align-items:center;justify-content:center;gap:.6rem;
+}
+.scale-btn{
+  border:2px solid var(--tan);
+  background:var(--warm);
+  border-radius:50%;
+  cursor:pointer;
+  transition:all .18s ease;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;color:var(--mbrown);font-family:'Nunito',sans-serif;
+  flex-shrink:0;
+}
+.scale-btn:nth-child(1){width:44px;height:44px;font-size:.85rem}
+.scale-btn:nth-child(2){width:50px;height:50px;font-size:.9rem}
+.scale-btn:nth-child(3){width:58px;height:58px;font-size:1rem;border-color:var(--lav)}
+.scale-btn:nth-child(4){width:50px;height:50px;font-size:.9rem}
+.scale-btn:nth-child(5){width:44px;height:44px;font-size:.85rem}
+.scale-btn:hover{border-color:var(--rose);background:var(--lrose);color:var(--rose);transform:scale(1.08)}
+.scale-btn.selected{
+  background:linear-gradient(135deg,var(--rose),var(--drose));
+  border-color:var(--drose);
+  color:white;
+  transform:scale(1.1);
+  box-shadow:0 4px 14px rgba(212,96,122,.35);
+}
+.scale-btn:nth-child(3).selected{transform:scale(1.15)}
+
+/* ── Nav ── */
+.q-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;
+}
+.answered-tag{
+  font-size:.78rem;color:var(--dsage);
+  display:flex;align-items:center;gap:.3rem;
+}
+.answered-tag::before{content:'✓';font-weight:700}
+
+/* ── Result ── */
+.result-hero{
+  text-align:center;
+  background:linear-gradient(135deg,var(--lrose),var(--llav));
+  border:1px solid var(--petal);
+  border-radius:28px;
+  padding:2.5rem 2rem;
+  margin-bottom:1.5rem;
+  position:relative;
+  overflow:hidden;
+}
+.result-hero::before{
+  content:'';
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 80% 20%,rgba(197,187,223,.4),transparent 60%);
+}
+.result-type-label{
+  font-size:.78rem;color:var(--drose);
+  text-transform:uppercase;letter-spacing:.12em;
+  margin-bottom:.5rem;
+}
+.result-type{
+  font-family:'Gowun Batang',serif;
+  font-size:clamp(4rem,14vw,6rem);
+  font-weight:700;
+  color:var(--drose);
+  line-height:1;
+  margin-bottom:.3rem;
+  text-shadow:0 2px 20px rgba(212,96,122,.2);
+}
+.result-name{
+  font-family:'Gowun Batang',serif;
+  font-size:1.5rem;
+  color:var(--dlav);
+  margin-bottom:.5rem;
+}
+.result-emoji{font-size:2.5rem;margin-bottom:.8rem;display:block}
+.result-tagline{
+  font-size:.95rem;
+  color:var(--mbrown);
+  font-style:italic;
+  max-width:420px;margin:0 auto;
+  line-height:1.6;
+}
+
+/* ── Dims bars ── */
+.dims-section{
+  background:white;
+  border:1px solid var(--tan);
+  border-radius:var(--card-r);
+  padding:1.5rem;
+  margin-bottom:1.2rem;
+  box-shadow:var(--shadow);
+}
+.dim-row{margin-bottom:1.2rem}
+.dim-row:last-child{margin-bottom:0}
+.dim-top{
+  display:flex;justify-content:space-between;
+  font-size:.8rem;font-weight:700;
+  color:var(--mbrown);margin-bottom:.5rem;
+}
+.dim-bar-wrap{
+  display:flex;align-items:center;gap:.6rem;
+  font-size:.72rem;color:var(--mbrown);
+}
+.dim-bar-bg{
+  flex:1;height:10px;
+  background:var(--warm);
+  border-radius:99px;
+  overflow:hidden;
+  border:1px solid var(--tan);
+  position:relative;
+}
+.dim-bar-fill{
+  height:100%;border-radius:99px;
+  transition:width 1s cubic-bezier(.4,0,.2,1);
+}
+.dim-lbl{width:28px;text-align:center;font-weight:700}
+
+/* ── Info grid ── */
+.info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;margin-bottom:1.2rem;
+}
+@media(max-width:500px){.info-grid{grid-template-columns:1fr}}
+.info-block{
+  background:white;
+  border:1px solid var(--tan);
+  border-radius:var(--card-r);
+  padding:1.3rem;
+  box-shadow:var(--shadow);
+}
+.info-block h4{
+  font-size:.72rem;
+  color:var(--mbrown);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin-bottom:.7rem;
+}
+.info-block p{
+  font-size:.88rem;
+  line-height:1.6;
+  color:var(--brown);
+}
+.tag-list{display:flex;flex-wrap:wrap;gap:.4rem}
+.tag{
+  padding:.25rem .8rem;border-radius:99px;
+  font-size:.75rem;font-weight:700;
+}
+.tag-green{background:var(--lsage);color:var(--dsage);border:1px solid #b5d1b7}
+.tag-red{background:#fef0f0;color:#c05050;border:1px solid #f5c0c0}
+.tag-blue{background:var(--llav);color:var(--dlav);border:1px solid #ccc3e8}
+.tag-pink{background:var(--lrose);color:var(--drose);border:1px solid #f0c0cc}
+
+.jobs-list{list-style:none}
+.jobs-list li{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.5rem 0;
+  border-bottom:1px dashed var(--tan);
+  font-size:.88rem;
+}
+.jobs-list li:last-child{border-bottom:none}
+.jobs-list li::before{content:'✦';color:var(--rose);font-size:.7rem}
+
+.quote-block{
+  background:linear-gradient(135deg,var(--lrose),var(--llav));
+  border-left:4px solid var(--rose);
+  border-radius:0 var(--card-r) var(--card-r) 0;
+  padding:1.3rem 1.5rem;
+  margin-bottom:1.2rem;
+  font-family:'Gowun Batang',serif;
+  font-size:1rem;
+  color:var(--drose);
+  line-height:1.7;
+  font-style:italic;
+}
+
+.famous-wrap{
+  background:white;
+  border:1px solid var(--tan);
+  border-radius:var(--card-r);
+  padding:1.3rem;
+  margin-bottom:1.2rem;
+  box-shadow:var(--shadow);
+}
+.famous-wrap h4{
+  font-size:.72rem;color:var(--mbrown);
+  text-transform:uppercase;letter-spacing:.08em;
+  margin-bottom:.8rem;
+}
+.famous-chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.famous-chip{
+  padding:.3rem .9rem;
+  background:var(--warm);
+  border:1px solid var(--tan);
+  border-radius:99px;
+  font-size:.8rem;
+  color:var(--brown);
+}
+
+.result-actions{
+  display:flex;flex-wrap:wrap;
+  gap:.8rem;justify-content:center;
+  margin-top:2rem;
+}
+
+/* ── Section header ── */
+.section-hdr{
+  display:flex;align-items:center;gap:.7rem;
+  margin-bottom:1rem;
+}
+.section-hdr-icon{font-size:1.3rem}
+.section-hdr h3{
+  font-family:'Gowun Batang',serif;
+  font-size:1.1rem;color:var(--brown);
+}
+
+/* ── Toast ── */
+.toast{
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--brown);color:white;
+  padding:.7rem 1.5rem;border-radius:99px;
+  font-size:.85rem;font-weight:600;
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  z-index:999;white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── Unanswered warning ── */
+.warn-label{
+  font-size:.8rem;color:#c05050;
+  display:flex;align-items:center;gap:.4rem;
+}
+.warn-label::before{content:'⚠️'}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--cream)}
+::-webkit-scrollbar-thumb{background:var(--petal);border-radius:3px}
+
+/* ── Responsive ── */
+@media(max-width:480px){
+  .q-card{padding:1.4rem 1.2rem}
+  .scale-btn:nth-child(1){width:40px;height:40px}
+  .scale-btn:nth-child(2){width:46px;height:46px}
+  .scale-btn:nth-child(3){width:52px;height:52px}
+  .scale-btn:nth-child(4){width:46px;height:46px}
+  .scale-btn:nth-child(5){width:40px;height:40px}
+}
+</style>
+</head>
+<body>
+
+<!-- Floating petals -->
+<div id="petals"></div>
+
+<div class="container">
+
+<!-- ══════════════════════════════════════════
+     SCREEN 1: WELCOME
+══════════════════════════════════════════ -->
+<div class="screen active" id="screen-welcome">
+  <div class="hero">
+    <div class="hero-badge">🌸 Монгол MBTI Тест</div>
+    <h1>Өөрийгөө<br/>мэдэр</h1>
+    <p class="hero-sub">Миний зан чанарын нууц юу вэ?</p>
+    <div class="deco-flowers">🌸 ✨ 🌿 ✨ 🌸</div>
+
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="ico">📝</div>
+        <strong>50 асуулт</strong>
+        <p>Нарийн боловсруулсан асуултууд</p>
+      </div>
+      <div class="info-card">
+        <div class="ico">⏱️</div>
+        <strong>~5 минут</strong>
+        <p>Богино хугацаанд дуусна</p>
+      </div>
+      <div class="info-card">
+        <div class="ico">🔬</div>
+        <strong>16 зан чанар</strong>
+        <p>Нарийн үр дүн харагдана</p>
+      </div>
+    </div>
+
+    <p style="font-size:.88rem;color:var(--mbrown);margin-bottom:1.8rem;line-height:1.7;max-width:400px;margin-left:auto;margin-right:auto">
+      Асуулт бүрт <strong>1–5</strong> оноогоор хариулна уу.<br/>
+      Аль болох шуурхай, анхны мэдрэмжээрээ хариул.
+    </p>
+
+    <button class="btn btn-primary" onclick="startQuiz()">
+      🌸 Тест эхлүүлэх
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 2: QUIZ
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-quiz">
+  <div class="progress-label">
+    <span id="q-counter">1 / 50</span>
+    <span id="q-answered">0 хариулсан</span>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-fill" id="progress-fill" style="width:2%"></div>
+  </div>
+
+  <div id="q-section-badge" class="q-section-badge"></div>
+
+  <div class="q-card">
+    <div class="q-num" id="q-num"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="scale-labels">
+      <span>Огт тохирохгүй</span>
+      <span>Тэнцүү</span>
+      <span>Яг тохирно</span>
+    </div>
+    <div class="scale-options" id="scale-options">
+      <button class="scale-btn" onclick="selectAnswer(1)">1</button>
+      <button class="scale-btn" onclick="selectAnswer(2)">2</button>
+      <button class="scale-btn" onclick="selectAnswer(3)">3</button>
+      <button class="scale-btn" onclick="selectAnswer(4)">4</button>
+      <button class="scale-btn" onclick="selectAnswer(5)">5</button>
+    </div>
+  </div>
+
+  <div class="q-nav">
+    <button class="btn btn-outline btn-sm" id="btn-prev" onclick="navigate(-1)">← Өмнөх</button>
+    <span id="answered-status"></span>
+    <button class="btn btn-primary btn-sm" id="btn-next" onclick="navigate(1)">Дараах →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 3: RESULT
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-result">
+  <div class="result-hero">
+    <div class="result-type-label">Таны MBTI төрөл</div>
+    <div class="result-emoji" id="res-emoji"></div>
+    <div class="result-type" id="res-type"></div>
+    <div class="result-name" id="res-name"></div>
+    <p class="result-tagline" id="res-tagline"></p>
+  </div>
+
+  <!-- Dimension bars -->
+  <div class="dims-section">
+    <div class="section-hdr">
+      <span class="section-hdr-icon">📊</span>
+      <h3>Хэмжээстүүд</h3>
+    </div>
+    <div class="dim-row">
+      <div class="dim-top"><span>Extraversion (E)</span><span>Introversion (I)</span></div>
+      <div class="dim-bar-wrap">
+        <span class="dim-lbl" id="d-e-pct">0%</span>
+        <div class="dim-bar-bg">
+          <div class="dim-bar-fill" id="d-e-bar" style="background:linear-gradient(90deg,#D4607A,#A83858)"></div>
+        </div>
+        <span class="dim-lbl" id="d-i-pct">0%</span>
+      </div>
+    </div>
+    <div class="dim-row">
+      <div class="dim-top"><span>Sensing (S)</span><span>Intuition (N)</span></div>
+      <div class="dim-bar-wrap">
+        <span class="dim-lbl" id="d-s-pct">0%</span>
+        <div class="dim-bar-bg">
+          <div class="dim-bar-fill" id="d-s-bar" style="background:linear-gradient(90deg,#5A7D5C,#98B89A)"></div>
+        </div>
+        <span class="dim-lbl" id="d-n-pct">0%</span>
+      </div>
+    </div>
+    <div class="dim-row">
+      <div class="dim-top"><span>Thinking (T)</span><span>Feeling (F)</span></div>
+      <div class="dim-bar-wrap">
+        <span class="dim-lbl" id="d-t-pct">0%</span>
+        <div class="dim-bar-bg">
+          <div class="dim-bar-fill" id="d-t-bar" style="background:linear-gradient(90deg,#7260A8,#C5BBDF)"></div>
+        </div>
+        <span class="dim-lbl" id="d-f-pct">0%</span>
+      </div>
+    </div>
+    <div class="dim-row">
+      <div class="dim-top"><span>Judging (J)</span><span>Perceiving (P)</span></div>
+      <div class="dim-bar-wrap">
+        <span class="dim-lbl" id="d-j-pct">0%</span>
+        <div class="dim-bar-bg">
+          <div class="dim-bar-fill" id="d-j-bar" style="background:linear-gradient(90deg,#C9954A,#E8D5C0)"></div>
+        </div>
+        <span class="dim-lbl" id="d-p-pct">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="info-block" style="margin-bottom:1.2rem">
+    <h4>📖 Тайлбар</h4>
+    <p id="res-desc"></p>
+  </div>
+
+  <!-- Strengths & Weaknesses -->
+  <div class="info-grid">
+    <div class="info-block">
+      <h4>✅ Давуу тал</h4>
+      <div class="tag-list" id="res-strengths"></div>
+    </div>
+    <div class="info-block">
+      <h4>⚠️ Сул тал</h4>
+      <div class="tag-list" id="res-weaknesses"></div>
+    </div>
+  </div>
+
+  <!-- Love -->
+  <div class="info-block" style="margin-bottom:1.2rem">
+    <h4>💗 Хайр дурлал</h4>
+    <p id="res-love"></p>
+  </div>
+
+  <!-- Jobs -->
+  <div class="info-block" style="margin-bottom:1.2rem">
+    <h4>💼 Тохирох ажил мэргэжил</h4>
+    <ul class="jobs-list" id="res-jobs"></ul>
+  </div>
+
+  <!-- Quote -->
+  <div class="quote-block" id="res-quote"></div>
+
+  <!-- Famous -->
+  <div class="famous-wrap">
+    <h4>🌟 Алдарт MBTI хамтрагчид</h4>
+    <div class="famous-chips" id="res-famous"></div>
+  </div>
+
+  <!-- Compatible types -->
+  <div class="info-block" style="margin-bottom:1.2rem">
+    <h4>💞 Хамгийн тохирох төрлүүд</h4>
+    <div class="tag-list" id="res-compat"></div>
+  </div>
+
+  <div class="result-actions">
+    <button class="btn btn-outline" onclick="restartQuiz()">🔄 Дахин тест өгөх</button>
+    <button class="btn btn-primary" onclick="shareResult()">📲 Хуваалцах</button>
+  </div>
+  <p style="text-align:center;font-size:.75rem;color:var(--mbrown);margin-top:1.2rem;opacity:.7">
+    🌸 Тест бүрэн үнэгүй &amp; монгол хэлээр
+  </p>
+</div>
+
+</div><!-- /container -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════
+const QUESTIONS = [
+  // E/I — 12 асуулт
+  {text:"Олон хүмүүстэй харилцах нь таны эрчим хүчийг нэмэгдүүлдэг.", dim:"EI", pos:"E", section:"Эрчим хүч"},
+  {text:"Нэгэн бие дангаараа байх нь таны сэтгэлд тайвшрал авчирдаг.", dim:"EI", pos:"I", section:"Эрчим хүч"},
+  {text:"Шинэ хүмүүстэй уулзахад та ихэвчлэн эхэлж ярьдаг.", dim:"EI", pos:"E", section:"Эрчим хүч"},
+  {text:"Их нийгмийн арга хэмжээний дараа ядарч сульдсан мэт санагддаг.", dim:"EI", pos:"I", section:"Эрчим хүч"},
+  {text:"Цөөн ойрын найзтай байхыг олон танил нөхдөөс илүүд үздэг.", dim:"EI", pos:"I", section:"Эрчим хүч"},
+  {text:"Шинэ хүнтэй танилцах нь таны хувьд хялбар, байгалийн зүйл.", dim:"EI", pos:"E", section:"Эрчим хүч"},
+  {text:"Хоёр чөлөөт цаг байхад та гэртээ чимээгүй байхыг дуртай.", dim:"EI", pos:"I", section:"Эрчим хүч"},
+  {text:"Олон хүн байх газарт та маш их эрч хүч мэдэрдэг.", dim:"EI", pos:"E", section:"Эрчим хүч"},
+  {text:"Та нөхөрлөлийн өргөн тойрог байхыг хүсдэг.", dim:"EI", pos:"E", section:"Эрчим хүч"},
+  {text:"Урт хугацааны харилцааг олон богино харилцаанаас илүүд үздэг.", dim:"EI", pos:"I", section:"Эрчим хүч"},
+  {text:"Та ярихдаа бодол чиглэлээ олдог — дуугаар бодох дуртай.", dim:"EI", pos:"E", section:"Эрчим хүч"},
+  {text:"Цуглаан, дэнлүүнд та ихэвчлэн ажиглагчийн үүрэгт байдаг.", dim:"EI", pos:"I", section:"Эрчим хүч"},
+
+  // S/N — 13 асуулт
+  {text:"Та тодорхой баримт, нарийн ширийн зүйлд анхаарал хандуулдаг.", dim:"SN", pos:"S", section:"Мэдрэхүй"},
+  {text:"Та ирээдүйн боломж, хэтийн төлөвийг бодох дуртай.", dim:"SN", pos:"N", section:"Мэдрэхүй"},
+  {text:"Та зүйлсийг шууд утгаар нь ойлгодог, бодит байдалд тулгуурладаг.", dim:"SN", pos:"S", section:"Мэдрэхүй"},
+  {text:"Та ихэвчлэн далд утга, холбоос хайдаг — гүнзгий ойлголт хайдаг.", dim:"SN", pos:"N", section:"Мэдрэхүй"},
+  {text:"Та ирсэн мэдээллийг туршлага, нотолгоогоор шалгадаг.", dim:"SN", pos:"S", section:"Мэдрэхүй"},
+  {text:"Та ухаалаг санаа, онол, загвар дуртай.", dim:"SN", pos:"N", section:"Мэдрэхүй"},
+  {text:"Та зааварчилгааг уншихаасаа өмнө шуурхай туршиж үздэг.", dim:"SN", pos:"N", section:"Мэдрэхүй"},
+  {text:"Та нарийн нарийн ширийн зүйлийг анхааралтай уншдаг.", dim:"SN", pos:"S", section:"Мэдрэхүй"},
+  {text:"Та мэдэж буй зүйлд итгэдэг, тааварт хянамгай байдаг.", dim:"SN", pos:"S", section:"Мэдрэхүй"},
+  {text:"Та шинэ боломж, санааг хайж эрэлхийлдэг.", dim:"SN", pos:"N", section:"Мэдрэхүй"},
+  {text:"Та зах зээлийн боломжийг шинэ нүдээр харж чаддаг.", dim:"SN", pos:"N", section:"Мэдрэхүй"},
+  {text:"Та одоо хийж буй зүйлдээ тогтвортой байдлыг эрхэмлэдэг.", dim:"SN", pos:"S", section:"Мэдрэхүй"},
+  {text:"Та хийсвэр санааг бодит амьдрал дээр хэрэглэхийг хүсдэг.", dim:"SN", pos:"N", section:"Мэдрэхүй"},
+
+  // T/F — 13 асуулт
+  {text:"Шийдвэр гаргахдаа та логик дүн шинжилгээг мэдрэмжээс илүүд үздэг.", dim:"TF", pos:"T", section:"Шийдвэр"},
+  {text:"Та нөгөө хүний сэтгэлийн байдалд маш мэдрэмжтэй.", dim:"TF", pos:"F", section:"Шийдвэр"},
+  {text:"Та маргаан дискуссэнд бодитой байж чаддаг, хувийн мэдрэмж оролцохгүй.", dim:"TF", pos:"T", section:"Шийдвэр"},
+  {text:"Танд зөрчилдөөнийг шийдвэрлэхдээ харилцааг хадгалах нь чухал.", dim:"TF", pos:"F", section:"Шийдвэр"},
+  {text:"Та шударга байхыг нигүүлсэнгүй байхаас дээд гэж үзнэ.", dim:"TF", pos:"T", section:"Шийдвэр"},
+  {text:"Та бусдыг шүүмжлэхдээ тэдний сэтгэл санааг харгалздаг.", dim:"TF", pos:"F", section:"Шийдвэр"},
+  {text:"Та ажил хэрэгч байхаас бусдыг дулаахан хүлээж авдаг.", dim:"TF", pos:"F", section:"Шийдвэр"},
+  {text:"Та зөрчилдөөний үед логик зарчимд суурилдаг.", dim:"TF", pos:"T", section:"Шийдвэр"},
+  {text:"Сайн шийдвэр бол логик хамгийн сайн тааруулсан шийдвэр.", dim:"TF", pos:"T", section:"Шийдвэр"},
+  {text:"Сайн шийдвэр бол оролцогч бүхний хэрэгцээг харгалзсан шийдвэр.", dim:"TF", pos:"F", section:"Шийдвэр"},
+  {text:"Та хэн нэгэнд буруу хэлэхдээ цаг алдалгүй шударгаар хэлдэг.", dim:"TF", pos:"T", section:"Шийдвэр"},
+  {text:"Та хэн нэгэнд буруу зүйлийг хэлэхдээ мэдрэмжийг дэмжин зөөлөн хэлдэг.", dim:"TF", pos:"F", section:"Шийдвэр"},
+  {text:"Та мэдрэмжийг логикийн адил чухал гэж үздэг.", dim:"TF", pos:"F", section:"Шийдвэр"},
+
+  // J/P — 12 асуулт
+  {text:"Та урьдчилан төлөвлөсөн хуваарийн дагуу ажиллахдаа тав тухтай байдаг.", dim:"JP", pos:"J", section:"Амьдралын хэв"},
+  {text:"Та нөхцөл байдалд нийцүүлэн уян хатнаар ажиллах дуртай.", dim:"JP", pos:"P", section:"Амьдралын хэв"},
+  {text:"Та аяллыг урьдчилан нарийн тооцоолон төлөвлөдөг.", dim:"JP", pos:"J", section:"Амьдралын хэв"},
+  {text:"Та зорьсон газраа очиж аяллын хуваарийг тэнд гаргадаг.", dim:"JP", pos:"P", section:"Амьдралын хэв"},
+  {text:"Та ажлаа эцсийн хугацаанаас өмнө дуусгах дуртай.", dim:"JP", pos:"J", section:"Амьдралын хэв"},
+  {text:"Та сүүлийн мөчид гарах шинэ мэдээлэлд суурилан шийдвэрт өөрчлөлт оруулдаг.", dim:"JP", pos:"P", section:"Амьдралын хэв"},
+  {text:"Та хэд хэдэн ажлыг зэрэг явуулж чаддаг.", dim:"JP", pos:"P", section:"Амьдралын хэв"},
+  {text:"Та нэг ажлыг дуусгасны дараа дараагийнхыг эхэлдэг.", dim:"JP", pos:"J", section:"Амьдралын хэв"},
+  {text:"Та хатуу дүрэм журам байхыг дуртай.", dim:"JP", pos:"J", section:"Амьдралын хэв"},
+  {text:"Та хатуу хязгаарлалтгүйгээр ажиллах дуртай.", dim:"JP", pos:"P", section:"Амьдралын хэв"},
+  {text:"Та шинэ ажилд шидэгдэн явцдаа суралцахыг дуртай.", dim:"JP", pos:"P", section:"Амьдралын хэв"},
+  {text:"Та шинэ ажил эхлэхдээ бэлтгэл сайтай, тодорхой болгодог.", dim:"JP", pos:"J", section:"Амьдралын хэв"},
+];
+
+const SECTION_ICONS = {
+  "Эрчим хүч":"⚡",
+  "Мэдрэхүй":"🔍",
+  "Шийдвэр":"⚖️",
+  "Амьдралын хэв":"🗓️"
+};
+
+const TYPES = {
+  INTJ:{name:"Архитект",emoji:"🏛️",tagline:"Стратегийн ухаалаг, бие даасан, тодорхой зорилготой.",
+    desc:"INTJ нь маш ховор зан чанар — дэлхийн хүн амын ердөө 2%. Урт хугацааны стратегч, логик сэтгэгч. Зорилгодоо хүрэхийн тулд нэгдсэн, оновчтой арга замыг хайдаг. Нийгэмшилд хайхрамжгүй мэт харагдсан ч дотроо гүн ухааны сэтгэлгээтэй.",
+    strengths:["Стратегийн сэтгэлгээ","Бие даасан","Нарийн логик","Зорилготой","Хатуужилтай"],
+    weaknesses:["Нийгэмшилд хэцүү","Хэт шүүмжлэлт","Уян биш","Сэтгэлийг илэрхийлэхгүй"],
+    love:"Гүн утга учиртай, оюуны өдөөлт бүхий харилцаа. Хамтрагчаасаа бие даасан байдлыг хүндэтгэхийг хүсдэг.",
+    jobs:["Стратегийн зөвлөх","Судлаач / Эрдэмтэн","Программ хангамжийн архитект","Удирдах ажилтан","Хууль зүйч"],
+    quote:'"Цөөн хүн бий, тэд хэзээ ч буруу биш гэж боддог. Гэхдээ тэдний хамгийн сайн нь л хамт ажиллах боломжтой." — INTJ',
+    famous:["Никола Тесла","Марк Цукерберг","Хосе Моуриньо","Арнольд Шварценеггер"],
+    compat:["ENTJ","ENTP","INFJ","INTJ"]},
+
+  INTP:{name:"Сэтгэгч",emoji:"🔭",tagline:"Онолч, логик судлаач. Ямар ч асуудалд гүн нэвтэрдэг.",
+    desc:"INTP нь хамгийн логикт суурилсан зан чанаруудын нэг. Тэд ертөнцийг загвар, онолоор ойлгохыг хичээдэг. Маш нарийн, аналитик сэтгэлгээтэй. Дотоод ертөнц нь нарийн, тэд харилцаанаас илүүтэй санааг үнэлдэг.",
+    strengths:["Аналитик сэтгэлгээ","Хийсвэр ойлголт","Бие даасан","Нарийн дүн шинжилгээ","Хязгааргүй сониуч"],
+    weaknesses:["Хэт хийсвэр","Практикт дунд","Мэдрэмж илэрхийлэхгүй","Тогтворгүй"],
+    love:"Оюун ухааны уялдаа холбоо. Ойлгодог, тэвчдэг хамтрагч хайдаг.",
+    jobs:["Математикч","Программист","Философич","Шинжлэх ухааны судлаач","Эдийн засагч"],
+    quote:'"Би бас сэтгэдэг, тиймээс би оршин байна. Тэгээд сэтгэхдээ дуусдаггүй." — INTP',
+    famous:["Альберт Эйнштейн","Чарльз Дарвин","Билл Гейтс","Рене Декарт"],
+    compat:["ENTJ","ENFJ","INTJ","INFJ"]},
+
+  ENTJ:{name:"Командир",emoji:"⚔️",tagline:"Шийдэмгий удирдагч. Зорилгодоо бусдыг чиглүүлдэг.",
+    desc:"ENTJ нь байгалийн жамаар удирдагч болдог зан чанар. Тэд зорилго тодорхойлж, бусдыг манлайлж, стратеги боловсруулдаг. Шийдэмгий, зоригтой — бэрхшээлийг боломж болгон хардаг.",
+    strengths:["Удирдах чадвар","Стратегч","Шийдэмгий","Зоригтой","Зохион байгуулагч"],
+    weaknesses:["Зөрүүд байдал","Хэт шаардлагатай","Мэдрэмжгүй мэт","Тэвчээргүй"],
+    love:"Тэгш байдалтай, зорилготой хамтрагч. Хамт ахиц дэвшил хийхийг хүсдэг.",
+    jobs:["Гүйцэтгэх захирал","Бизнесийн удирдагч","Улс төрч","Санхүүгийн зөвлөх","Арми дарга"],
+    quote:'"Ялагч хоёр сонголттой: ялах эсвэл ялах." — ENTJ',
+    famous:["Стив Жобс","Маргарет Тэтчер","Жулиус Цезарь","Ремон Зиодаро"],
+    compat:["INTP","INFP","INTJ","ENFJ"]},
+
+  ENTP:{name:"Маргаач",emoji:"⚡",tagline:"Санаачлагатай маргагч. Хязгаарыг нь хайж байдаг.",
+    desc:"ENTP нь уян, бүтээлч, маргаанд дуртай зан чанар. Тэд хуучин санааг эргэлзэж, шинэ боломж хардаг. Маш ухаалаг, байнга шинэ санааг туршиж байдаг — тэвчдэг хүнтэй хамтарвал гайхалтай ажилладаг.",
+    strengths:["Бүтээлч сэтгэлгээ","Уян хатан","Ухаалаг","Зоригтой","Харилцааны"],
+    weaknesses:["Тогтворгүй","Маргаанд хэтрэх","Дуусгахгүй орхих","Дүрмийг үл хайхрах"],
+    love:"Оюуны өдөөлт, адал явдал. Хамтрагч нь тэгш байдалтай, сониуч байхыг хүсдэг.",
+    jobs:["Улс төрч","Бизнес зөвлөх","Зохиолч","Сурталчлагч","Судлаач"],
+    quote:'"Миний мэдэхгүй зүйл надад хамгийн их сониуч татдаг." — ENTP',
+    famous:["Томас Эдисон","Бенжамин Франклин","Марк Твейн","Стив Возняк"],
+    compat:["INFJ","INTJ","ENFJ","INFP"]},
+
+  INFJ:{name:"Зөвлөгч",emoji:"🌙",tagline:"Гүн нигүүлсэнгүй, ухаалаг. Утга учир хайгч.",
+    desc:"INFJ бол дэлхийн хамгийн ховор зан чанар — зөвхөн 1-2%. Тэд гүн нигүүлсэнгүй, нарийн ойлголттой, утга учиртай амьдралыг эрхэмлэдэг. Бусдад тусламж хандивлах нь тэдний гол зориулалт.",
+    strengths:["Хүнийг гүн ойлгодог","Нигүүлсэнгүй","Бүтээлч","Зорилготой","Итгэлтэй"],
+    weaknesses:["Хэт мэдрэмтгий","Хил хязгаар тогтооход хэцүү","Хэт идеалист","Ядарч сүйдэх"],
+    love:"Гүн сэтгэлийн нэгдэл. Ойлгодог, дэмждэг хамтрагч хайдаг.",
+    jobs:["Сэтгэл засалч","Зохиолч","Зөвлөгч","Профессор","Нийгмийн ажилтан"],
+    quote:'"Би хүмүүсийг харах тусмаа бүх зүйл холбоотой гэдгийг мэдэрдэг." — INFJ',
+    famous:["Нельсон Мандела","Мать Тереза","Мартин Лютер Кинг","Достоевский"],
+    compat:["ENFP","ENTP","INTJ","INFP"]},
+
+  INFP:{name:"Зуучлагч",emoji:"🌸",tagline:"Идеалист, бүтээлч. Ертөнцийг сайжруулах мөрөөдөлтэй.",
+    desc:"INFP нь хайр, утга учир, идеалд зориулагдсан сэтгэл. Ертөнцийг өөрт байгаагаас илүү сайн болгохыг мөрөөддэг ховор зан чанар — дэлхийн 4%. Тэд гүн нигүүлсэнгүй, уран сэтгэмжтэй, үнэт зүйлсэддээ үнэнч.",
+    strengths:["Бүтээлч сэтгэлгээ","Нигүүлсэнгүй","Идеалист","Уян хатан","Үнэнч"],
+    weaknesses:["Хэт мэдрэмтгий","Хэт мөрөөдлийн","Практикт хэцүү","Өөрийгөө шүүмжилдэг"],
+    love:"Жинхэнэ үнэнч, гүн сэтгэлийн харилцаа. Ойлгодог, дэмждэг хамтрагч хайдаг.",
+    jobs:["Зохиолч / Яруу найрагч","Сэтгэл зүйч","Хөгжимч / Урлагч","Нийгмийн ажилтан","Дизайнер"],
+    quote:'"Хэт бодно, гүнзгий мэдэрнэ, цэнэглэхийн тулд алга болдог... гэхдээ хүчтэй, тодорхой болж эргэдэг." — INFP',
+    famous:["Жон Леннон","Ж.Р.Р. Толкин","Уильям Шекспир","Одри Хепберн"],
+    compat:["ENFJ","INFJ","ENFP","ENTJ"]},
+
+  ENFJ:{name:"Гол дүр",emoji:"🌟",tagline:"Урам зоригч удирдагч. Бусдын хөгжилд зориулагдсан.",
+    desc:"ENFJ нь байгалийн жамаар хүмүүсийг урамшуулж, чиглүүлдэг. Тэд бусдын сайн сайхны тулд ажилладаг. Нийгэмч, халамжтай, тод хүн. Хамт олноо нэгтгэж, хөгжүүлэх чадвартай.",
+    strengths:["Бусдыг урамшуулах","Нийгэмч","Халамжтай","Харилцааны","Удирдагч"],
+    weaknesses:["Хэт өөрийгөө золиослох","Шүүмжлэлд мэдрэмтгий","Хэт зааш","Хил хязгаар байхгүй"],
+    love:"Нийгэмд тус болох, хамтдаа өсөх харилцаа. Хамтрагчаасаа халамж, ойлголт хайдаг.",
+    jobs:["Багш","Сурталчлагч","Нийгмийн ажилтан","Зөвлөгч","Бизнесийн удирдагч"],
+    quote:'"Нэг хүний амийг аврах нь дэлхийг аврасантай тэнцэнэ." — ENFJ',
+    famous:["Барак Обама","Опра Уинфри","Нельсон Мандела","Мартин Лютер Кинг"],
+    compat:["INFP","ISFP","INFJ","ENFP"]},
+
+  ENFP:{name:"Сурталчлагч",emoji:"🎨",tagline:"Бүтээлч, идэвхтэй. Хүн бүртэй гүн холбогддог.",
+    desc:"ENFP нь хамгийн уян хатан, бүтээлч зан чанаруудын нэг. Тэд хүмүүстэй гүн холбоо тогтоож, шинэ боломж хайдаг. Урам зориг, аяндаа байдал, сэтгэлийн дулаан нь тэдний тодорхой шинж.",
+    strengths:["Урам зориг","Бүтээлч","Нийгэмч","Идэвхтэй","Нигүүлсэнгүй"],
+    weaknesses:["Тогтворгүй","Хэт эмоциональ","Анхаарал хуваагддаг","Дуусгахгүй орхих"],
+    love:"Адал явдал, хөгжил, гүн холбоо. Хамтрагчтайгаа хамт өсөхийг хүсдэг.",
+    jobs:["Зар сурталчилгаа","Сэтгүүлч","Дизайнер","Жүжигчин","Зөвлөгч"],
+    quote:'"Зүрхийг дагаж явах нь зөв. Тиймээс би хааш нь явж байгаагаа мэдэхгүй байсан ч явдаг." — ENFP',
+    famous:["Робин Уильямс","Уолт Дисней","Эллен ДеДженерес","Марк Твейн"],
+    compat:["INFJ","INTJ","INFP","ENFJ"]},
+
+  ISTJ:{name:"Логист",emoji:"📋",tagline:"Хариуцлагатай, тогтвортой. Дүрэм журмыг дагагч.",
+    desc:"ISTJ нь хамгийн найдвартай зан чанаруудын нэг. Тэд хариуцлагатай, нарийн, тогтвортой. Хийсэн амлалтаа биелүүлдэг, нийгмийн дэг журмыг хадгалахыг хүсдэг.",
+    strengths:["Найдвартай","Хариуцлагатай","Нарийн","Тогтвортой","Зохион байгуулагч"],
+    weaknesses:["Хэт дүрэм","Уян биш","Шинэлэг санааг эсэргүүцэх","Мэдрэмж илэрхийлэхгүй"],
+    love:"Найдвартай, тогтвортой харилцаа. Амлалтаа биелүүлдэг хамтрагч хайдаг.",
+    jobs:["Нягтлан","Менежер","Хуульч","Цагдаа","Эмч"],
+    quote:'"Амлалт бол амлалт. Би хийдэг зүйлийг хэлдэг, хэлдэг зүйлийг хийдэг." — ISTJ',
+    famous:["Уоррен Баффет","Кондолиза Райс","Жорж Вашингтон","Нэтфликсийн ОГС"],
+    compat:["ESTP","ESFP","ISTJ","ISFJ"]},
+
+  ISFJ:{name:"Хамгаалагч",emoji:"🛡️",tagline:"Хамгаалагч, дулаахан. Бусдад аюулгүй орчин бүтээдэг.",
+    desc:"ISFJ нь хамгийн халамжтай зан чанаруудын нэг. Тэд бусдын хэрэгцээг анхаардаг, дулаан, найдвартай. Уламжлалт үнэт зүйлийг хадгалах, хайрласан хүмүүсээ хамгаалах нь тэдний зориулалт.",
+    strengths:["Халамжтай","Найдвартай","Нарийн","Тогтвортой","Эелдэг"],
+    weaknesses:["Хэт зөвшөөрдөг","Шүүмжлэлд мэдрэмтгий","Өөрчлөлтийг эсэргүүцэх","Өөрийгөө хойш тавих"],
+    love:"Аюулгүй, дулаан гэр. Хамтрагчийнхаа хэрэгцээг ойлгодог хүн хайдаг.",
+    jobs:["Эмч","Сувилагч","Сурган хүмүүжүүлэгч","Нийгмийн ажилтан","Нягтлан"],
+    quote:'"Хамгийн сайн үйлдэл бол хайрт хүмүүсийг маань инээлгэх юм." — ISFJ',
+    famous:["Мать Тереза","Роза Паркс","Кэйт Мидлтон","Бейонсе"],
+    compat:["ESTP","ESFP","ISTJ","ENFJ"]},
+
+  ESTJ:{name:"Гүйцэтгэгч",emoji:"⚙️",tagline:"Зохион байгуулагч, шийдэмгий. Дүрэм журмыг хэрэгжүүлэгч.",
+    desc:"ESTJ нь захиргааны ажилд хамгийн тохиромжтой зан чанар. Тэд зохион байгуулагч, шийдэмгий, бодитой. Нийгмийн дэг журмыг хадгалахыг хүсдэг, найдвартай, хариуцлагатай.",
+    strengths:["Зохион байгуулагч","Шийдэмгий","Найдвартай","Хариуцлагатай","Удирдагч"],
+    weaknesses:["Уян биш","Мэдрэмжгүй мэт","Шинэлэг санааг эсэргүүцэх","Хэт шаардлагатай"],
+    love:"Бодит, тогтвортой харилцаа. Хариуцлагатай, зорилготой хамтрагч хайдаг.",
+    jobs:["Менежер","Цагдаа","Хуульч","Нягтлан","Улс төрч"],
+    quote:'"Зохион байгуулалт бол амжилтын үндэс." — ESTJ',
+    famous:["Хилари Клинтон","Мишель Обама","Жонн Д. Рокфеллер","Сандра Дэй О'Коннор"],
+    compat:["ISTP","ISFP","INTP","INFP"]},
+
+  ESFJ:{name:"Консул",emoji:"🤝",tagline:"Нийгэмч, халамжтай. Бусдад тусламж хандивлагч.",
+    desc:"ESFJ нь хамгийн нийгэмч, халамжтай зан чанаруудын нэг. Тэд бусдын хэрэгцээнд анхаардаг, харилцааг чухалчилдаг. Нийгмийн уур амьсгалыг сайн мэдэрч, бусдыг нэгтгэдэг.",
+    strengths:["Нийгэмч","Халамжтай","Хамтач","Найдвартай","Харилцааны"],
+    weaknesses:["Хэт шүүмжлэлт","Хэт хэрэгцээлэгч","Зөрчилдөөнөөс зайлсхийх","Өөрчлөлтийг эсэргүүцэх"],
+    love:"Дулаан, итгэлцсэн харилцаа. Хамтрагчдаа тасралтгүй анхаарал тавьдаг.",
+    jobs:["Багш","Эрүүл мэндийн ажилтан","Нийгмийн ажилтан","Арилжаач","Нийгмийн менежер"],
+    quote:'"Хамгийн том баяр бол бусдад тусалж, тэднийг инээлгэх явдал." — ESFJ',
+    famous:["Тэйлор Свифт","Билл Клинтон","Хюго Чавес","Дженнифер Лопез"],
+    compat:["ISFP","ISTP","INFP","ENFP"]},
+
+  ISTP:{name:"Виртуоз",emoji:"🔧",tagline:"Практик асуудал шийдэгч. Хэрхэн ажилладгийг ойлгодог.",
+    desc:"ISTP нь практик, аналитик, уян хатан зан чанар. Тэд хэрхэн ажилладгийг ойлгоход дуртай, асуудлыг шуурхай шийддэг. Тайван, тогтвортой — хямралын үед хамгийн сайн ажилладаг.",
+    strengths:["Практик","Уян хатан","Тайван","Шуурхай шийдвэр","Аналитик"],
+    weaknesses:["Сэтгэлийн дотоод байдал","Харилцаанд хайхрамжгүй","Урт хугацааны зорилго байхгүй","Хэт болгоомжтой"],
+    love:"Хувийн орон зай, харилцан хүндэтгэл. Нэг нэгнийхээ бие даасан байдлыг хүндэтгэдэг хамтрагч.",
+    jobs:["Инженер","Мэс засалч","Механикч","Пилот","Спортын тамирчин"],
+    quote:'"Ажлыг харалт — гэхдээ хамгийн тохиромжтой арга замыг хайж байна." — ISTP',
+    famous:["Клинт Иствуд","Брюс Ли","Майкл Жордан","Том Круз"],
+    compat:["ESTJ","ENTJ","ESFJ","ENFJ"]},
+
+  ISFP:{name:"Адал явдалт",emoji:"🦋",tagline:"Чөлөөт, бүтээлч. Одоогийн мөчийг хайрлан амьдардаг.",
+    desc:"ISFP нь нигүүлсэнгүй, бүтээлч, тайван зан чанар. Тэд урлаг, гоо үзэсгэлэнд дуртай, одоогийн мөчөнд амьдардаг. Хувийн үнэт зүйлсдэдээ үнэнч, бусдыг шүүмжилдэггүй.",
+    strengths:["Бүтээлч","Нигүүлсэнгүй","Уян хатан","Тайван","Бодит"],
+    weaknesses:["Урт хугацааны зорилго байхгүй","Зөрчилдөөнөөс зайлсхийх","Хэт нүдний өмнөхдөө","Шүүмжлэлд мэдрэмтгий"],
+    love:"Хайрт хүндлэл, одоогийн мөч. Хамтрагч нь тэдний зан чанарыг бүрэн хүлээн зөвшөөрдөг.",
+    jobs:["Урлагч","Хөгжимч","Загвар зохион байгуулагч","Гэрэл зурагчин","Байгаль хамгаалагч"],
+    quote:'"Хамгийн гоё зүйлс үгэнд ороход бэрх байдаг. Би тэдгээрийг мэдэрдэг." — ISFP',
+    famous:["Мишель Жексон","Бриттни Спирс","Боб Дилан","Принс"],
+    compat:["ESTJ","ESFJ","ENTJ","ENFJ"]},
+
+  ESTP:{name:"Бизнесмен",emoji:"🚀",tagline:"Идэвхтэй, шуурхай. Тоглоомын дунд хамгийн гэрэлтдэг.",
+    desc:"ESTP нь хамгийн энергитэй, бодит зан чанаруудын нэг. Тэд хямралын үед хамгийн сайн ажилладаг, шуурхай шийдвэр гаргадаг. Нийгэмч, тод, өөртөө итгэлтэй.",
+    strengths:["Шуурхай шийдвэр","Нийгэмч","Бодит","Эр зоригтой","Уян хатан"],
+    weaknesses:["Урт хугацааны","Дүрмийг үл хайхрах","Хэт болдог","Тогтворгүй"],
+    love:"Адал явдал, хөгжил. Идэвхтэй, тод хамтрагч хайдаг.",
+    jobs:["Гүйцэтгэх захирал","Хөрөнгийн зуучлагч","Цагдаа","Спортын тамирчин","Сурталчлагч"],
+    quote:'"Нэг минут бие даасан байх нь хориг таваас илүү сонирхолтой." — ESTP',
+    famous:["Эрнест Хемингуэй","Теодор Рузвельт","Жэк Николсон","Мадонна"],
+    compat:["ISFJ","ISTJ","INFJ","INTJ"]},
+
+  ESFP:{name:"Хөгжилдөгч",emoji:"🎉",tagline:"Спонтан, хөгжилтэй. Амьдралыг тайзны шоу болгодог.",
+    desc:"ESFP нь хамгийн хөгжилтэй, нийгэмч зан чанаруудын нэг. Тэд хүмүүсийг инээлгэж, хөгжөөдөг. Спонтан, дулаан, одоогийн мөчийг бүрэн амьдардаг.",
+    strengths:["Нийгэмч","Хөгжилтэй","Дулаахан","Уян хатан","Энергитэй"],
+    weaknesses:["Хэт тулгамдаж орох","Хамтрал хайх","Урт хугацааны тооцоогүй","Шүүмжлэлд мэдрэмтгий"],
+    love:"Хөгжилтэй, дулаахан харилцаа. Хамтрагчтайгаа хамт амьдралыг тэмдэглэдэг.",
+    jobs:["Жүжигчин","Хөгжимч","Хөтлөгч","Борлуулагч","Арга хэмжээний зохион байгуулагч"],
+    quote:'"Амьдрал богино. Хөгжилтэй, дулаахан, бодит байгаарай." — ESFP',
+    famous:["Элвис Пресли","Мэрилин Монро","Адель","Кайли Миноуг"],
+    compat:["ISFJ","ISTJ","INFJ","INTJ"]},
+};
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let answers = {};
+let current = 0;
+
+// ══════════════════════════════════════════════
+// PETALS
+// ══════════════════════════════════════════════
+function createPetals(){
+  const wrap = document.getElementById('petals');
+  const symbols = ['🌸','✨','🌿','💮','🌺','⭐','🍃'];
+  for(let i=0;i<14;i++){
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = symbols[i % symbols.length];
+    p.style.left = (Math.random()*100) + '%';
+    p.style.animationDuration = (8 + Math.random()*12) + 's';
+    p.style.animationDelay = (Math.random()*15) + 's';
+    p.style.fontSize = (.8 + Math.random()*.8) + 'rem';
+    wrap.appendChild(p);
+  }
+}
+createPetals();
+
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function startQuiz(){
+  answers = {};
+  current = 0;
+  renderQuestion();
+  showScreen('quiz');
+}
+
+function restartQuiz(){
+  startQuiz();
+}
+
+// ══════════════════════════════════════════════
+// QUIZ LOGIC
+// ══════════════════════════════════════════════
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  const total = QUESTIONS.length;
+  const answered = Object.keys(answers).length;
+
+  // Progress
+  document.getElementById('q-counter').textContent = `${current+1} / ${total}`;
+  document.getElementById('q-answered').textContent = `${answered} хариулсан`;
+  document.getElementById('progress-fill').style.width = ((current+1)/total*100) + '%';
+
+  // Section badge
+  const sec = q.section;
+  document.getElementById('q-section-badge').innerHTML =
+    `<span>${SECTION_ICONS[sec]||'📌'}</span> ${sec}`;
+
+  // Question
+  document.getElementById('q-num').textContent = `Асуулт ${current+1}`;
+  document.getElementById('q-text').textContent = q.text;
+
+  // Scale buttons
+  const btns = document.querySelectorAll('.scale-btn');
+  btns.forEach((btn, i) => {
+    btn.classList.toggle('selected', answers[current] === (i+1));
+  });
+
+  // Status
+  const statusEl = document.getElementById('answered-status');
+  if(answers[current] !== undefined){
+    statusEl.innerHTML = `<span class="answered-tag">Хариулсан</span>`;
+  } else {
+    statusEl.textContent = '';
+  }
+
+  // Buttons
+  document.getElementById('btn-prev').disabled = current === 0;
+  document.getElementById('btn-prev').style.opacity = current === 0 ? '.4' : '1';
+  document.getElementById('btn-next').textContent =
+    current === total-1 ? '🎯 Дүн гаргах' : 'Дараах →';
+}
+
+function selectAnswer(val){
+  answers[current] = val;
+  renderQuestion();
+  // Auto advance after short delay
+  if(current < QUESTIONS.length - 1){
+    setTimeout(()=>{
+      if(answers[current] !== undefined) navigate(1);
+    }, 420);
+  }
+}
+
+function navigate(dir){
+  if(dir === 1 && current === QUESTIONS.length - 1){
+    // Check all answered
+    const missing = [];
+    for(let i=0;i<QUESTIONS.length;i++){
+      if(answers[i] === undefined) missing.push(i+1);
+    }
+    if(missing.length > 0){
+      showToast(`⚠️ ${missing.length} асуultад хариулаагүй байна!`);
+      // Jump to first unanswered
+      current = missing[0] - 1;
+      renderQuestion();
+      return;
+    }
+    showResult();
+    return;
+  }
+  if(dir === -1 && current === 0) return;
+  current += dir;
+  renderQuestion();
+}
+
+// ══════════════════════════════════════════════
+// RESULT CALCULATION
+// ══════════════════════════════════════════════
+function showResult(){
+  const scores = {E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};
+  const OPP = {E:'I',I:'E',S:'N',N:'S',T:'F',F:'T',J:'P',P:'J'};
+
+  QUESTIONS.forEach((q,i)=>{
+    const v = answers[i] || 3;
+    if(v < 3) scores[OPP[q.pos]] += (3-v);
+    else if(v > 3) scores[q.pos] += (v-3);
+  });
+
+  const E = scores.E >= scores.I ? 'E' : 'I';
+  const S = scores.S >= scores.N ? 'S' : 'N';
+  const T = scores.T >= scores.F ? 'T' : 'F';
+  const J = scores.J >= scores.P ? 'J' : 'P';
+  const type = E+S+T+J;
+
+  const tEI = Math.max(scores.E+scores.I,1);
+  const tSN = Math.max(scores.S+scores.N,1);
+  const tTF = Math.max(scores.T+scores.F,1);
+  const tJP = Math.max(scores.J+scores.P,1);
+
+  const pE = Math.round(scores.E/tEI*100);
+  const pI = 100-pE;
+  const pS = Math.round(scores.S/tSN*100);
+  const pN = 100-pS;
+  const pT = Math.round(scores.T/tTF*100);
+  const pF = 100-pT;
+  const pJ = Math.round(scores.J/tJP*100);
+  const pP = 100-pJ;
+
+  const data = TYPES[type];
+
+  // Hero
+  document.getElementById('res-emoji').textContent = data.emoji;
+  document.getElementById('res-type').textContent = type;
+  document.getElementById('res-name').textContent = data.name;
+  document.getElementById('res-tagline').textContent = data.tagline;
+
+  // Bars (animate after render)
+  setTimeout(()=>{
+    document.getElementById('d-e-pct').textContent = pE+'%';
+    document.getElementById('d-e-bar').style.width = pE+'%';
+    document.getElementById('d-i-pct').textContent = pI+'%';
+
+    document.getElementById('d-s-pct').textContent = pS+'%';
+    document.getElementById('d-s-bar').style.width = pS+'%';
+    document.getElementById('d-n-pct').textContent = pN+'%';
+
+    document.getElementById('d-t-pct').textContent = pT+'%';
+    document.getElementById('d-t-bar').style.width = pT+'%';
+    document.getElementById('d-f-pct').textContent = pF+'%';
+
+    document.getElementById('d-j-pct').textContent = pJ+'%';
+    document.getElementById('d-j-bar').style.width = pJ+'%';
+    document.getElementById('d-p-pct').textContent = pP+'%';
+  }, 200);
+
+  // Content
+  document.getElementById('res-desc').textContent = data.desc;
+  document.getElementById('res-love').textContent = data.love;
+  document.getElementById('res-quote').textContent = data.quote;
+
+  const strengths = document.getElementById('res-strengths');
+  strengths.innerHTML = data.strengths.map(s=>`<span class="tag tag-green">${s}</span>`).join('');
+
+  const weaknesses = document.getElementById('res-weaknesses');
+  weaknesses.innerHTML = data.weaknesses.map(w=>`<span class="tag tag-red">${w}</span>`).join('');
+
+  const jobs = document.getElementById('res-jobs');
+  jobs.innerHTML = data.jobs.map(j=>`<li>${j}</li>`).join('');
+
+  const famous = document.getElementById('res-famous');
+  famous.innerHTML = data.famous.map(f=>`<span class="famous-chip">${f}</span>`).join('');
+
+  const compat = document.getElementById('res-compat');
+  compat.innerHTML = data.compat.map(c=>`<span class="tag tag-blue">${c}</span>`).join('');
+
+  showScreen('result');
+}
+
+// ══════════════════════════════════════════════
+// SHARE
+// ══════════════════════════════════════════════
+function shareResult(){
+  const type = document.getElementById('res-type').textContent;
+  const name = document.getElementById('res-name').textContent;
+  const text = `Миний MBTI төрөл: ${type} — ${name} 🌸\nЧи бас тест өгөөрэй!`;
+  if(navigator.share){
+    navigator.share({title:'MBTI Тест', text, url:location.href});
+  } else {
+    navigator.clipboard.writeText(text + '\n' + location.href)
+      .then(()=>showToast('📋 Хуулагдлаа!'))
+      .catch(()=>showToast('📋 Хуулж авна уу: ' + text));
+  }
+}
+
+// ══════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
